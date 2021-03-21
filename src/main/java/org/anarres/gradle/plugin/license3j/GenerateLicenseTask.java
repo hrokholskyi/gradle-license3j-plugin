@@ -157,8 +157,8 @@ public class GenerateLicenseTask extends ConventionTask {
 
     @CheckForNull
     @Internal
-    public Instant getLicenseExpiresAt() {
-        Feature feature = features.get("expiresAt");
+    public Instant getLicenseExpiryDate() {
+        Feature feature = features.get("expiryDate");
         if (feature == null)
             return null;
         return feature.getInstant();
@@ -166,10 +166,10 @@ public class GenerateLicenseTask extends ConventionTask {
 
     @Internal
     public boolean isLicenseExpired() {
-        Instant expiresAt = getLicenseExpiresAt();
-        if (expiresAt == null)
+        Instant expiryDate = getLicenseExpiryDate();
+        if (expiryDate == null)
             return false;
-        return Instant.now().isAfter(expiresAt);
+        return Instant.now().isAfter(expiryDate);
     }
 
     public void feature(@Nonnull Feature feature) {
@@ -225,13 +225,13 @@ public class GenerateLicenseTask extends ConventionTask {
         issuedAt(datetime.toInstant());
     }
 
-    public void expiresAt(@Nonnull Instant value) {
-        feature("expiresAt", value);
+    public void expiryDate(@Nonnull Instant value) {
+        feature("expiryDate", value);
     }
 
-    public void expiresAt(@Nonnull String value) {
+    public void expiryDate(@Nonnull String value) {
         ZonedDateTime datetime = ZonedDateTime.parse(value, DATE_PARSER);
-        expiresAt(datetime.toInstant());
+        expiryDate(datetime.toInstant());
     }
 
     /**
@@ -241,7 +241,7 @@ public class GenerateLicenseTask extends ConventionTask {
      */
     public void expiresAfterIssue(@Nonnegative long value, @Nonnull TemporalUnit unit) {
         Instant issuedAt = features.get("issuedAt").getInstant();
-        expiresAt(issuedAt.plus(value, unit));
+        expiryDate(issuedAt.plus(value, unit));
     }
 
     /**
@@ -259,7 +259,7 @@ public class GenerateLicenseTask extends ConventionTask {
      * @param unit
      */
     public void expiresAfterNow(@Nonnegative long value, @Nonnull TemporalUnit unit) {
-        expiresAt(Instant.now().plus(value, unit));
+        expiryDate(Instant.now().plus(value, unit));
     }
 
     /**
